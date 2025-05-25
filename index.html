@@ -48,7 +48,7 @@
       navigator.geolocation.getCurrentPosition(async (position) => {
         const location = `${position.coords.latitude},${position.coords.longitude}`;
 
-        const response = await fetch("YOUR_SCRIPT_URL", {
+        const response = await fetch("https://script.google.com/macros/s/AKfycbzpe7_E0nfspDEaR1Lrg-4N_48pgTdolJJkHnoRi6cjzfOebgvganIfVUQc6rv4NjJg/exec", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email, notes, date, time, location })
