@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 longitude: position.coords.longitude
             };
 
-            fetch("https://script.google.com/macros/s/AKfycbywBjznfzqlV5SOWCFFcWtz3mHhG1W4UrmPlBroYGKLFMn-HpACUFtYCxmvintd7xYh/exec", {
+            fetch("https://script.google.com/macros/s/AKfycbxxcKkIVEHkeJ1PXHgAF39xHH5QAPc3RFvlVwzrVRn1X9PL5SFXyWKgo_v8PxCC9wIj/exec", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
