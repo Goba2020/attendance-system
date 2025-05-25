@@ -1,0 +1,118 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>تسجيل الحضور</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: #f0f4f8;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    .container {
+      background: white;
+      padding: 2rem;
+      border-radius: 20px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+    }
+    h1 {
+      margin-bottom: 1rem;
+      color: #1e88e5;
+    }
+    input, textarea, button {
+      width: 100%;
+      padding: 0.75rem;
+      margin: 0.5rem 0;
+      border-radius: 12px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+    button {
+      background-color: #1e88e5;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background-color: #1565c0;
+    }
+    #message {
+      margin-top: 1rem;
+      color: green;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>تسجيل الحضور</h1>
+    <input type="email" id="email" placeholder="البريد الإلكتروني" required />
+    <textarea id="notes" placeholder="ملاحظات (اختياري)"></textarea>
+    <button onclick="submitAttendance()">تسجيل الحضور</button>
+    <div id="message"></div>
+  </div>
+
+  <script>
+    const scriptURL = "https://script.google.com/macros/s/AKfycbxNuFK5L9833U0qhIcPPN31wgk_pOUJOPJiP8DthGyxDK65IkvWrZcyprEZB8nQXRqy/exec";
+
+    // تحميل البريد من localStorage
+    window.onload = () => {
+      const savedEmail = localStorage.getItem("email");
+      if (savedEmail) {
+        document.getElementById("email").value = savedEmail;
+        document.getElementById("email").disabled = true;
+      }
+    };
+
+    function submitAttendance() {
+      const emailInput = document.getElementById("email");
+      const notes = document.getElementById("notes").value;
+
+      const email = emailInput.value;
+      if (!email) {
+        alert("يرجى إدخال البريد الإلكتروني");
+        return;
+      }
+
+      if (!localStorage.getItem("email")) {
+        localStorage.setItem("email", email);
+        emailInput.disabled = true;
+      }
+
+      navigator.geolocation.getCurrentPosition(position => {
+        const location = `${position.coords.latitude}, ${position.coords.longitude}`;
+
+        fetch(scriptURL, {
+          method: 'POST',
+          body: JSON.stringify({ email, notes, location }),
+          headers: { "Content-Type": "application/json" }
+        })
+        .then(res => res.text())
+        .then(data => {
+          document.getElementById("message").innerText = data;
+          document.getElementById("notes").value = "";
+        })
+        .catch(err => {
+          console.error(err);
+          alert("حدث خطأ أثناء الإرسال.");
+        });
+
+      }, () => {
+        alert("تعذر الحصول على الموقع الجغرافي.");
+      });
+    }
+  </script>
+</body>
+</html>
